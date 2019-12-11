@@ -8,4 +8,7 @@ class Settings():
         self.swidth = 1200
         self.sheight = 800
         self.bg_color = (255, 255, 255)
-        
+
+        # Gravity variable and jump variable
+        self.grav_var = 1.05
+        self.jump_var = 3
