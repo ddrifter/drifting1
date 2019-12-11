@@ -9,6 +9,7 @@ class Settings():
         self.sheight = 800
         self.bg_color = (255, 255, 255)
 
-        # Gravity variable and jump variable
-        self.grav_var = 1.05
+        # Gravity variable/constant and jump variable
+        self.grav_var = 0.9
+        self.grav_const = 1.2
         self.jump_var = 3

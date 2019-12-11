@@ -26,8 +26,9 @@ class Player(Sprite):
         self.moving_right = False
         self.jumped = False
 
-        # Gravity constant from settings
+        # Gravity constant and variable, with the jump variable from settings
         self.grav_var = settings.grav_var
+        self.grav_const = settings.grav_const
         self.jump_var = settings.jump_var
 
     def update_moving(self):
@@ -52,9 +53,9 @@ class Player(Sprite):
                         self.jumped = False
 
             # Performs the gravity calculations
-            self.y += 1.1 * self.grav_var
+            self.y += 0.1 + self.grav_var*self.grav_const
             self.rect.y = self.y 
-            self.grav_var += 0.008
+            self.grav_var += 0.008 * self.grav_const
 
             # Checks if the player is near the bottom of the screen and turns gravity and jumped flag off
             if abs(self.rect.bottom - self.screen_rect.bottom) < 4:
