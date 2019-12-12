@@ -5,27 +5,53 @@ checking for collisions, etc.
 import sys
 
 import pygame
+import pygame.sprite
 
 def check_keydown_events(event, player, platforms, settings):
+    """A function handling keydown events."""
     if event.key == pygame.K_q:
         sys.exit()
+
     if event.key == pygame.K_LEFT:
-        # Set the flag moving_left true
-        player.moving_left = True
+        # Set the flag moving_left true if the player is not close to the left side of the platform
+        counter = 0
+        for platform in platforms:
+            if (abs(player.rect.left - platform.rect.right) < 4 and player.rect.top < platform.rect.bottom
+                and player.rect.bottom > platform.rect.bottom):
+                player.moving_left = False
+                counter += 1
+        # If there are no instances of the player being too close to the left side of the platform
+        # then the player can move to the left
+        if counter == 0:
+            player.moving_left = True
+
     if event.key == pygame.K_RIGHT:
-        # Set the flag moving_right true
-        player.moving_right = True
+        # Set the flag moving_right true if the player is not close to the left side of the platform
+        counter = 0
+        for platform in platforms:
+            if (abs(player.rect.right - platform.rect.left) < 4 and player.rect.top < platform.rect.bottom
+                and player.rect.bottom > platform.rect.bottom):
+                player.moving_right = False
+                counter += 1
+        # If there are no instances of the player being too close to the right side of the platform
+        # then the player can move to the right
+        if counter == 0:
+            player.moving_right = True
+
     if event.key == pygame.K_SPACE:
         for platform in platforms:
             # Check if the player is on the bottom of the screen
             # OR if the player has the requirement of being on top of a platform
-            # AND within the x-region of the specific platform
-            if (abs(player.rect.bottom - settings.sheight) < 3 or 
-                (abs(player.rect.bottom - platform.rect.top) < 2 and 
-                (player.rect.right > platform.rect.left or player.rect.left < platform.rect.right))):
+            if (abs(player.rect.bottom - settings.sheight) < 3 or abs(player.rect.bottom - platform.rect.top) < 2):
                 player.jumped = True
 
+    if event.key == pygame.K_DOWN:
+        # Checks if the player is on a platform and starts falling to a lower level
+        if player.on_top > 0:
+            player.effect_of_gravity()
+            
 def check_keyup_events(event, player):
+    """A function handling keyup events."""
     if event.key == pygame.K_LEFT:
         # Stop moving left
         player.moving_left = False
@@ -52,7 +78,6 @@ def update_screen(screen, sett, player, platforms):
     screen.fill(sett.bg_color)
 
     player.update_moving()
-    player.player_gravity(platforms, sett)
 
     if player.jumped:
         player.jump(platforms, sett)

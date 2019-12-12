@@ -13,3 +13,5 @@ class Settings():
         self.grav_var = 0.9
         self.grav_const = 1.2
         self.jump_var = 3
+        self.under_var = 0
+        self.on_top = 0

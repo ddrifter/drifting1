@@ -30,6 +30,8 @@ class Player(Sprite):
         self.grav_var = settings.grav_var
         self.grav_const = settings.grav_const
         self.jump_var = settings.jump_var
+        self.under_var = settings.under_var
+        self.on_top = settings.on_top
 
     def update_moving(self):
         """Updates the player's position based on the flags moving_left and moving_right."""
@@ -40,31 +42,42 @@ class Player(Sprite):
             self.x += 1.5
             self.rect.x = self.x  
 
-    def player_gravity(self, platforms, settings):
+    def player_gravity(self, platforms, settings, player):
         """Makes the player succeptible to gravitational influence."""
+        self.on_top = settings.on_top
+
         if self.rect.bottom < self.screen_rect.bottom:
             for platform in platforms:
                 # Check if the player is in on top (needs fixing) of any platform, and, if so, 
                 # adjust parameters accordingly so the player can land/stand on the platform
-                if ((abs(self.rect.bottom - platform.rect.top) < 3) and (self.rect.right > platform.rect.left)
+                if ((abs(self.rect.bottom - platform.rect.top) < 2) and (self.rect.right > platform.rect.left)
                     and (self.rect.left < platform.rect.right)):
-                        self.grav_var = settings.grav_var
-                        self.jump_var = settings.jump_var
-                        self.jumped = False
+                    self.grav_var = settings.grav_var
+                    self.jump_var = settings.jump_var
+                    self.jumped = False
+                    self.on_top += 1
+            
+            # Performs the gravity calculations if the player is not ontop of a platform
+            if self.on_top == 0:#not pygame.sprite.spritecollideany(player, platforms):
+                self.effect_of_gravity()
 
-            # Performs the gravity calculations
-            self.y += 0.1 + self.grav_var*self.grav_const
-            self.rect.y = self.y 
-            self.grav_var += 0.008 * self.grav_const
-
-            # Checks if the player is near the bottom of the screen and turns gravity and jumped flag off
+            # Checks if the player is near the bottom of the screen and resets grav_var and jump_var
+            # and turns jumped flag off
             if abs(self.rect.bottom - self.screen_rect.bottom) < 4:
                 self.grav_var = settings.grav_var
                 self.jump_var = settings.jump_var
                 self.jumped = False
 
+    def effect_of_gravity(self):
+        """Effects of gravity on the player, changes the y-coordinate."""
+        self.y += 0.1 + self.grav_var*self.grav_const
+        self.rect.y = self.y 
+        self.grav_var += 0.01 * self.grav_var   
+
     def jump(self, platforms, settings):
         """Function for jumping."""
+        self.under_var = settings.under_var
+
         for platform in platforms:
             # Check, for every platform, if the player is positioned right underneath it and stop
             # jumping, reset jump_var and set jumped flag to False
@@ -72,9 +85,10 @@ class Player(Sprite):
                 and self.rect.left < platform.rect.right):
                 self.jump_var = settings.jump_var
                 self.jumped = False
-                break
+                self.under_var += 1
         
-        if self.jump_var > -5:
+        # If the player is not underneath any platform -> jump OR is on top of a platform
+        if (self.jump_var >= -6 and self.under_var == 0) or self.on_top > 0:
             self.y -= (5 + self.jump_var) 
             self.rect.y = self.y
             self.jump_var -= 0.1           

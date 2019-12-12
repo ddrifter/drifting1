@@ -33,6 +33,7 @@ def run_game():
 
     while True: 
         # Game loop.
+        player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett)
         gf.update_screen(screen, sett, player, platforms)
 
