@@ -16,3 +16,11 @@ class Settings():
         self.jump_var = 3
         self.under_var = 0
         self.on_top = 0
+
+        # Player counters for checking proximity to either left or right side of a platform
+        self.moving_left_counter = 0
+        self.moving_right_counter = 0
+
+        # Enemy settings
+        self.enemy_max_health = 100
+        

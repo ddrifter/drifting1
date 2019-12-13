@@ -27,6 +27,8 @@ class Player(Sprite):
         # Flags for moving and jumping
         self.moving_left = False
         self.moving_right = False
+        self.moving_left_counter = settings.moving_left_counter
+        self.moving_right_counter = settings.moving_right_counter
         self.staying_still = True
         self.jumped = False
 
@@ -44,19 +46,43 @@ class Player(Sprite):
         self.on_top = settings.on_top
         self.downward = False
 
-    def update_moving(self):
-        """Updates the player's position based on the flags moving_left and moving_right."""
+    def update_moving(self, platforms):
+        """
+        Updates the player's position based on the flags moving_left and moving_right and sets the
+        moved_left and moved_right flags. Also checks if the player is near any side of any platform 
+        and (hopefully) stops movement to that side while the circumstances remain.
+        """
+        # Set the counters to 0 so they can be increased if the player is near the side of a platform
+        self.moving_left_counter = 0
+        self.moving_right_counter = 0
+
         if self.moving_left and self.rect.left > 0:
-            self.x -= 1.5
-            self.rect.x = self.x
+            for platform in platforms:
+                if (abs(self.rect.left - platform.rect.right) < 4 and self.rect.top < platform.rect.bottom
+                    and self.rect.bottom > platform.rect.top):
+                    # Increase the counter if the player if within the boundaries of the right
+                    # side of any platform
+                    self.moving_left_counter += 1
+
+            if self.moving_left_counter == 0:        
+                self.x -= 1.5
+                self.rect.x = self.x
             
             # Flags for determining which player image will be displayed
             self.moved_right = False
             self.moved_left = True 
 
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += 1.5
-            self.rect.x = self.x  
+            for platform in platforms:
+                if (abs(self.rect.right - platform.rect.left) < 4 and self.rect.top < platform.rect.bottom
+                    and self.rect.bottom > platform.rect.bottom):
+                    # Increase the counter if the player if within the boundaries of the left
+                    # side of any platform
+                    self.moving_right_counter += 1
+            
+            if self.moving_right_counter == 0:
+                self.x += 1.5
+                self.rect.x = self.x  
 
              # Flags for determining which player image will be displayed
             self.moved_left = False

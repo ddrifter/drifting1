@@ -40,6 +40,7 @@ def check_keydown_events(event, player, platforms, settings):
         # then the player can move to the right
         if counter == 0:
             player.moving_right = True
+        print(counter)
 
     if event.key == pygame.K_SPACE:
         for platform in platforms:
@@ -90,7 +91,7 @@ def update_screen(screen, sett, player, platforms):
     """
     screen.fill(sett.bg_color)
 
-    player.update_moving()
+    player.update_moving(platforms)
 
     if player.jumped:
         player.jump(platforms, sett)
