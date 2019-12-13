@@ -141,7 +141,7 @@ class Player(Sprite):
             self.y -= (5 + self.jump_var) 
             self.rect.y = self.y
             self.jump_var -= 0.1           
-            print(self.jump_var)  
+            #print(self.jump_var)  
 
     def blitme(self):
         """

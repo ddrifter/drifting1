@@ -20,6 +20,7 @@ def run_game():
     
     player = Player(screen, sett)
     platforms = Group()
+    enemies = Group()
     # Platform(screen, x, y)
     platform_1 = Platform(screen, 100, sett.sheight - 200)
     platform_2 = Platform(screen, sett.swidth - platform_1.rect.width - 100, 
@@ -32,11 +33,16 @@ def run_game():
     platforms.add(platform_2)
     platforms.add(platform_3)
 
+    enemy_counter = sett.enemy_counter
+    enemy_counter_threshold = sett.enemy_counter_threshold
+
     while True: 
         # Game loop.
+        enemy_counter += 1
         player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett)
-        gf.update_screen(screen, sett, player, platforms)
-        gf.add_enemy(screen, player, sett)
+        gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold)
+        if enemy_counter == enemy_counter_threshold:
+            enemy_counter = sett.enemy_counter
 
 run_game()

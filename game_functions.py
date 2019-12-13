@@ -3,6 +3,7 @@ All major game functions for checking events, drawing on screen,
 checking for collisions, etc.
 """
 import sys
+import time
 
 import pygame
 import pygame.sprite
@@ -16,31 +17,12 @@ def check_keydown_events(event, player, platforms, settings):
         sys.exit()
 
     if event.key == pygame.K_LEFT:
-        # Set the flag moving_left true if the player is not close to the left side of the platform
-        counter = 0
-        for platform in platforms:
-            if (abs(player.rect.left - platform.rect.right) < 4 and player.rect.top < platform.rect.bottom
-                and player.rect.bottom > platform.rect.bottom):
-                player.moving_left = False
-                counter += 1
-        # If there are no instances of the player being too close to the left side of the platform
-        # then the player can move to the left
-        if counter == 0:
-            player.moving_left = True
+        # Set the flag moving_left True 
+        player.moving_left = True
 
     if event.key == pygame.K_RIGHT:
-        # Set the flag moving_right true if the player is not close to the left side of the platform
-        counter = 0
-        for platform in platforms:
-            if (abs(player.rect.right - platform.rect.left) < 4 and player.rect.top < platform.rect.bottom
-                and player.rect.bottom > platform.rect.bottom):
-                player.moving_right = False
-                counter += 1
-        # If there are no instances of the player being too close to the right side of the platform
-        # then the player can move to the right
-        if counter == 0:
-            player.moving_right = True
-        print(counter)
+        # Set the flag moving_right True 
+        player.moving_right = True
 
     if event.key == pygame.K_SPACE:
         for platform in platforms:
@@ -77,13 +59,14 @@ def check_events(player, platforms, settings):
         if e.type == pygame.QUIT:
             sys.exit()
 
-def add_enemy(screen, player, sett):
+def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold):
     """Adds an enemy when the requirements are fullfiled."""
-    enemies = Group()
-    enemy = Enemy(sett)
-    enemies.add(enemy)
+    if enemy_counter == enemy_counter_threshold:
+        enemy = Enemy(sett, screen, player)
+        enemies.add(enemy)
 
-def update_screen(screen, sett, player, platforms):
+
+def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold):
     """
     Update the position of all the elements on screen.
     Update the screen with every new frame, draw all the elements on screen.
@@ -92,6 +75,11 @@ def update_screen(screen, sett, player, platforms):
     screen.fill(sett.bg_color)
 
     player.update_moving(platforms)
+
+    add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold)
+
+    for enemy in enemies:
+        enemy.blitme()
 
     if player.jumped:
         player.jump(platforms, sett)
