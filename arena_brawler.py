@@ -1,4 +1,5 @@
 """Main program file for the game, contains calls to all major functions."""
+import time
 
 import pygame
 from pygame.sprite import Group
@@ -36,6 +37,6 @@ def run_game():
         player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett)
         gf.update_screen(screen, sett, player, platforms)
-
+        gf.add_enemy(screen, player, sett)
 
 run_game()

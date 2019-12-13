@@ -1,4 +1,6 @@
 """Class Player with it's properties and functions."""
+import time
+
 import pygame
 from pygame.sprite import Sprite
 
@@ -8,8 +10,9 @@ class Player(Sprite):
     def __init__(self, screen, settings):
         """Initializes the player's properties."""
         super(Player, self).__init__()
-        self.image = pygame.image.load("images/player.bmp")
-        self.rect = self.image.get_rect()
+        self.image_left = pygame.image.load("images/player_left.bmp")
+        self.image_right = pygame.image.load("images/player_right.bmp")
+        self.rect = self.image_left.get_rect()
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
 
@@ -24,23 +27,40 @@ class Player(Sprite):
         # Flags for moving and jumping
         self.moving_left = False
         self.moving_right = False
+        self.staying_still = True
         self.jumped = False
 
-        # Gravity constant and variable, with the jump variable from settings
+        # Flags for determining which player image will be displayed
+        # (in the beginning it's the 'right' image)
+        self.moved_right = True
+        self.moved_left = False
+
+        # Gravity constant and variable, with the jump variable from settings and other 
+        # variables that help with jumping constrainst and gravity constrainst
         self.grav_var = settings.grav_var
         self.grav_const = settings.grav_const
         self.jump_var = settings.jump_var
         self.under_var = settings.under_var
         self.on_top = settings.on_top
+        self.downward = False
 
     def update_moving(self):
         """Updates the player's position based on the flags moving_left and moving_right."""
         if self.moving_left and self.rect.left > 0:
             self.x -= 1.5
             self.rect.x = self.x
+            
+            # Flags for determining which player image will be displayed
+            self.moved_right = False
+            self.moved_left = True 
+
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += 1.5
             self.rect.x = self.x  
+
+             # Flags for determining which player image will be displayed
+            self.moved_left = False
+            self.moved_right = True 
 
     def player_gravity(self, platforms, settings, player):
         """Makes the player succeptible to gravitational influence."""
@@ -48,10 +68,12 @@ class Player(Sprite):
 
         if self.rect.bottom < self.screen_rect.bottom:
             for platform in platforms:
-                # Check if the player is in on top (needs fixing) of any platform, and, if so, 
+                # Check if the player is in on top of any platform, and, if so, 
                 # adjust parameters accordingly so the player can land/stand on the platform
+                # > if the downward flag is True then dont go into the conditional and just proceed to
+                # > gravity calculations
                 if ((abs(self.rect.bottom - platform.rect.top) < 2) and (self.rect.right > platform.rect.left)
-                    and (self.rect.left < platform.rect.right)):
+                    and (self.rect.left < platform.rect.right) and not self.downward):
                     self.grav_var = settings.grav_var
                     self.jump_var = settings.jump_var
                     self.jumped = False
@@ -67,6 +89,7 @@ class Player(Sprite):
                 self.grav_var = settings.grav_var
                 self.jump_var = settings.jump_var
                 self.jumped = False
+                self.downward = False
 
     def effect_of_gravity(self):
         """Effects of gravity on the player, changes the y-coordinate."""
@@ -95,5 +118,12 @@ class Player(Sprite):
             print(self.jump_var)  
 
     def blitme(self):
-        """Draws the player at its current location."""
-        self.screen.blit(self.image, self.rect)
+        """
+        Draws the player at its current location keeping in mind the last known direction
+        the player was facing to have a uniform player picture displayed without unnecessary
+        alteration
+        """
+        if self.moved_right:
+            self.screen.blit(self.image_right, self.rect)
+        elif self.moved_left:
+            self.screen.blit(self.image_left, self.rect)

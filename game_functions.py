@@ -6,6 +6,9 @@ import sys
 
 import pygame
 import pygame.sprite
+from pygame.sprite import Group
+
+from enemy import Enemy
 
 def check_keydown_events(event, player, platforms, settings):
     """A function handling keydown events."""
@@ -48,6 +51,7 @@ def check_keydown_events(event, player, platforms, settings):
     if event.key == pygame.K_DOWN:
         # Checks if the player is on a platform and starts falling to a lower level
         if player.on_top > 0:
+            player.downward = True
             player.effect_of_gravity()
             
 def check_keyup_events(event, player):
@@ -58,6 +62,9 @@ def check_keyup_events(event, player):
     if event.key == pygame.K_RIGHT:
         # Stop moving right
         player.moving_right = False
+    if event.key == pygame.K_DOWN:
+        # Resets the downward flag
+        player.downward = False
 
 def check_events(player, platforms, settings):
     """Checks for all keypresses and relegates to other more specific functions."""
@@ -68,6 +75,12 @@ def check_events(player, platforms, settings):
             check_keyup_events(e, player)
         if e.type == pygame.QUIT:
             sys.exit()
+
+def add_enemy(screen, player, sett):
+    """Adds an enemy when the requirements are fullfiled."""
+    enemies = Group()
+    enemy = Enemy(sett)
+    enemies.add(enemy)
 
 def update_screen(screen, sett, player, platforms):
     """
