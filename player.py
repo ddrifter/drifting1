@@ -1,11 +1,9 @@
 """Class Player with it's properties and functions."""
-import time
-
 import pygame
 from pygame.sprite import Sprite
 
 class Player(Sprite):
-    """Defines the class Player with the player's propertes."""
+    """Defines the class Player with the player's properties."""
     
     def __init__(self, screen, settings):
         """Initializes the player's properties."""

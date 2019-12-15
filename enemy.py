@@ -55,10 +55,3 @@ class Enemy(Sprite):
     def blitme(self):
         """A function for drawing the enemy on screen."""
         self.screen.blit(self.image, self.rect)
-       
-
-        
-
-
-
-

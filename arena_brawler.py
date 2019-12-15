@@ -1,6 +1,4 @@
 """Main program file for the game, contains calls to all major functions."""
-import time
-
 import pygame
 from pygame.sprite import Group
 
@@ -8,6 +6,8 @@ from settings import Settings
 from player import Player
 from platforms import Platform
 import game_functions as gf
+from stats import GameStats
+from player_attack import PlayerFistAttackRight, PlayerFistAttackLeft
 
 def run_game():
     """
@@ -15,13 +15,16 @@ def run_game():
     """
     pygame.init()
     sett = Settings()
+    stats = GameStats(sett)
     screen = pygame.display.set_mode((sett.swidth, sett.sheight))
     pygame.display.set_caption("Arena-brawler Roguelike")
     
     player = Player(screen, sett)
     platforms = Group()
     enemies = Group()
-    # Platform(screen, x, y)
+    player_attack_right = PlayerFistAttackRight(player, screen)
+    player_attack_left = PlayerFistAttackLeft(player, screen)
+
     platform_1 = Platform(screen, 100, sett.sheight - 200)
     platform_2 = Platform(screen, sett.swidth - platform_1.rect.width - 100, 
                             sett.sheight - 200)
@@ -40,8 +43,9 @@ def run_game():
         # Game loop.
         enemy_counter += 1
         player.player_gravity(platforms, sett, player)
-        gf.check_events(player, platforms, sett)
-        gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold)
+        gf.check_events(player, platforms, sett, player_attack_left, player_attack_right)
+        gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
+                            stats, player_attack_left, player_attack_right)
         if enemy_counter == enemy_counter_threshold:
             enemy_counter = sett.enemy_counter
 

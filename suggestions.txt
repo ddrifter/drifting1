@@ -1,16 +1,20 @@
 
-add: >enemies periodically (every 1s perhaps), 
-     >player/enemy collision, 
+add: >enemies periodically (every 1s perhaps), [DONE]
+     >player/enemy collision that results in the player losing a life, [DONE]
+     >player attack animation (fist attack -> left, right, and up(?)), [DONE]
+     >player attack animation collision with enemy -> defeat of enemy [DONE]
+     >enemy movement(hmhmhmhm),
      >player score, 
      >player lives with thumbnails (where the player image deteriorates with each thumbnail),
      >start button, 
      >additional levels with more platforms and better enemies, 
      >player sounds for hitting an enemy, being hurt, etc. (my voice with a kung fu twist hahah)
+     >highscores with names (when entering a name thats with a better score and that already 
+      exists erase the previous instance and replace with the newer one)
 
-add (harder): >player animations (fist attack -> left, right, and up), 
+add (harder): >enemy spawn animation
               >enemy shooting, 
-              >player shield for defense against enemy bullets platform spikes animation, 
+              >player shield for defense against enemy bullets, 
+              >platform spikes animation, 
               >powerups with additional levels and with little thumbnails on the side of the 
                screen of current powerups, 
-              >highscores with names (when entering a name thats with a better score and that already 
-               exists erase the previous instance and replace with the newer one)

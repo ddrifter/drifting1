@@ -21,6 +21,9 @@ class Settings():
         self.moving_left_counter = 0
         self.moving_right_counter = 0
 
+        # Other player settings
+        self.max_player_lives = 3
+
         # Enemy settings
         self.enemy_max_health = 100
         self.enemy_speed = 1.2
