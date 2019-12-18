@@ -29,8 +29,10 @@ class Settings():
         self.enemy_speed = 1.2
         self.enemy_speed_multiplier = 1
         self.enemy_level_1_dist_from_player = 400
+        self.enemy_score = 10
+        self.enemy_score_multiplier = 1
 
         # Enemy counter for delay in the generation of new enemies
         self.enemy_counter = 0
-        self.enemy_counter_threshold = 700
+        self.enemy_counter_threshold = 300
         

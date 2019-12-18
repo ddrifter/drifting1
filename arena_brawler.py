@@ -8,6 +8,7 @@ from platforms import Platform
 import game_functions as gf
 from stats import GameStats
 from player_attack import PlayerFistAttackRight, PlayerFistAttackLeft
+from enemy import EnemyMovement
 
 def run_game():
     """
@@ -22,6 +23,8 @@ def run_game():
     player = Player(screen, sett)
     platforms = Group()
     enemies = Group()
+    enemy_movement = EnemyMovement()
+
     player_attack_right = PlayerFistAttackRight(player, screen)
     player_attack_left = PlayerFistAttackLeft(player, screen)
 
@@ -30,11 +33,15 @@ def run_game():
                             sett.sheight - 200)
     platform_3 = Platform(screen, (sett.swidth/2) - (platform_1.rect.width/2), 
                             sett.sheight - 400)
+    platform_4 = Platform(screen, 100, sett.sheight - 550)
+    platform_5 = Platform(screen, sett.swidth - platform_1.rect.width - 100, sett.sheight - 550)
     
     # Add platform_x to platforms
     platforms.add(platform_1)
     platforms.add(platform_2)
     platforms.add(platform_3)
+    platforms.add(platform_4)
+    platforms.add(platform_5)
 
     enemy_counter = sett.enemy_counter
     enemy_counter_threshold = sett.enemy_counter_threshold
@@ -45,7 +52,7 @@ def run_game():
         player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett, player_attack_left, player_attack_right)
         gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                            stats, player_attack_left, player_attack_right)
+                            stats, player_attack_left, player_attack_right, enemy_movement)
         if enemy_counter == enemy_counter_threshold:
             enemy_counter = sett.enemy_counter
 

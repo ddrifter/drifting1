@@ -7,7 +7,7 @@ import sys
 import pygame
 import pygame.sprite
 
-from enemy import Enemy
+from enemy import Enemy, EnemyMovement
 
 def check_keydown_events(event, player, platforms, settings, player_attack_left, player_attack_right):
     """A function handling keydown events."""
@@ -73,7 +73,7 @@ def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_thresh
 
 
 def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                    stats, player_attack_left, player_attack_right):
+                    stats, player_attack_left, player_attack_right, enemy_movement):
     """
     Update the position of all the elements on screen.
     Update the screen with every new frame, draw all the elements on screen.
@@ -86,6 +86,14 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
     # Periodically adds enemies on screen
     add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold)
 
+    # Draw all platforms
+    for platform in platforms:
+        platform.blitme()
+    
+    # Perform enemy movement
+    for enemy in enemies:
+        enemy_movement.enemy_movement(enemy, player)
+
     enemies.draw(screen)
     
     # The conditions for entering into these functions are inside the player_attack_ classes
@@ -97,13 +105,20 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
     # Since pygame's inbuilt funtions for collision detection do not work with classes that have
     # no explicitly defined (and used) rect attribute, which in this case I see as unfortunate 
     # because I can't think of a way to implement both the left and the right fist attack in the same
-    # class, so now there are two classes> PlayerFistAttackRight and PlayerFistAttackLeft
+    # class using a single rect, so now there are two classes> PlayerFistAttackRight and PlayerFistAttackLeft
     # (both have explicitly defined rect, for future use)
-    enemy_left = pygame.sprite.spritecollideany(player_attack_left, enemies)
-    enemy_right = pygame.sprite.spritecollideany(player_attack_right, enemies)
+    enemy_left = None
+    enemy_right = None
+    if player_attack_left.attack_left == True or player_attack_right.attack_right == True:
+        enemy_left = pygame.sprite.spritecollideany(player_attack_left, enemies)
+        enemy_right = pygame.sprite.spritecollideany(player_attack_right, enemies)
     if enemy_left:
+        stats.score += enemy_left.total_score
+        print(stats.score)
         enemies.remove(enemy_left)
     if enemy_right:
+        stats.score += enemy_right.total_score
+        print(stats.score)
         enemies.remove(enemy_right)
 
     if pygame.sprite.spritecollideany(player, enemies):
@@ -111,10 +126,6 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
 
     if player.jumped:
         player.jump(platforms, sett)
-
-    # Draw all platforms
-    for platform in platforms:
-        platform.blitme()
 
     player.blitme()
 

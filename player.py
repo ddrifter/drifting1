@@ -58,7 +58,7 @@ class Player(Sprite):
             for platform in platforms:
                 if (abs(self.rect.left - platform.rect.right) < 4 and self.rect.top < platform.rect.bottom
                     and self.rect.bottom > platform.rect.top):
-                    # Increase the counter if the player if within the boundaries of the right
+                    # Increase the counter if the player is within the boundaries of the right
                     # side of any platform
                     self.moving_left_counter += 1
 
@@ -74,7 +74,7 @@ class Player(Sprite):
             for platform in platforms:
                 if (abs(self.rect.right - platform.rect.left) < 4 and self.rect.top < platform.rect.bottom
                     and self.rect.bottom > platform.rect.bottom):
-                    # Increase the counter if the player if within the boundaries of the left
+                    # Increase the counter if the player is within the boundaries of the left
                     # side of any platform
                     self.moving_right_counter += 1
             
@@ -104,7 +104,7 @@ class Player(Sprite):
                     self.on_top += 1
             
             # Performs the gravity calculations if the player is not ontop of a platform
-            if self.on_top == 0:#not pygame.sprite.spritecollideany(player, platforms):
+            if self.on_top == 0:
                 self.effect_of_gravity()
 
             # Checks if the player is near the bottom of the screen and resets grav_var and jump_var
@@ -139,8 +139,7 @@ class Player(Sprite):
             self.y -= (5 + self.jump_var) 
             self.rect.y = self.y
             self.jump_var -= 0.1           
-            #print(self.jump_var)  
-
+      
     def blitme(self):
         """
         Draws the player at its current location keeping in mind the last known direction
