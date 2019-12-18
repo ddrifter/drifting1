@@ -150,3 +150,33 @@ class Player(Sprite):
             self.screen.blit(self.image_right, self.rect)
         elif self.moved_left:
             self.screen.blit(self.image_left, self.rect)
+
+class PlayerLives(Sprite):
+    """A class for drawing thumbnails of player lives."""
+    def __init__(self, screen):
+        """Initializes with 3 thumbnails."""
+        self.screen = screen
+        self.image_3_lives = pygame.image.load("images/player_life_3.png")
+        self.image_2_lives = pygame.image.load("images/player_life_2.png")
+        self.image_1_lives = pygame.image.load("images/player_life_1.png")
+
+        self.rect_3 = self.image_3_lives.get_rect()
+        self.rect_2 = self.image_2_lives.get_rect()
+        self.rect_1 = self.image_1_lives.get_rect()
+
+        self.rect_3.y = 20
+        self.rect_3.x = 20
+        self.rect_2.y = 20
+        self.rect_2.x = self.rect_3.width + 40
+        self.rect_1.y = 20
+        self.rect_1.x = self.rect_3.width + self.rect_2.width + 60
+        
+    def blitme(self, stats):
+        """Draws the current number of lives."""
+        if stats.lives_left >= 1:
+            self.screen.blit(self.image_1_lives, self.rect_1)
+        if stats.lives_left >= 2:
+            self.screen.blit(self.image_2_lives, self.rect_2)
+        if stats.lives_left == 3:
+            self.screen.blit(self.image_3_lives, self.rect_3)
+

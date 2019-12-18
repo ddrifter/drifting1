@@ -14,8 +14,10 @@ class PlayerFistAttackRight(Sprite):
         
         # Position the right fist image on the right border of the player rect (on the inside,
         # of course)
-        self.rect.right = player.rect.right
-        self.rect.centery = player.rect.centery
+        #self.rect.right = player.rect.right
+        #self.rect.centery = player.rect.centery
+        self.rect.right = 0
+        self.rect.centery = 0
 
         # A flag to determine if the player is currently attacking and in which 
         # direction in order to actively change the coordinates of the fist images

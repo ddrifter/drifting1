@@ -19,9 +19,7 @@ class Enemy(Sprite):
         # Enemy stats
         self.max_health = settings.enemy_max_health
         self.curr_health = self.max_health
-        self.speed = settings.enemy_speed
         self.speed_multiplier = settings.enemy_speed_multiplier
-        self.total_speed = self.speed * self.speed_multiplier
         self.score = settings.enemy_score
         self.score_multiplier = settings.enemy_score_multiplier
         self.total_score = self.score * self.score_multiplier
@@ -107,8 +105,8 @@ class EnemyMovement():
         self.dist_from_player_y = abs(enemy.rect.y - player.rect.y)
 
         # Define movement steps
-        self.x_move_step = self.dist_from_player_x / 400
-        self.y_move_step = self.dist_from_player_y / 400
+        self.x_move_step = (self.dist_from_player_x / 400) * enemy.speed_multiplier
+        self.y_move_step = (self.dist_from_player_y / 400) * enemy.speed_multiplier
 
         # Slightly increase the speed if the enemy is very close to the player
         if self.x_move_step < 1:

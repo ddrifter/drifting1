@@ -1,14 +1,12 @@
-
+N == next
 add: >enemies periodically (every 1s perhaps), [DONE]
      >player/enemy collision that results in the player losing a life, [DONE]
      >player attack animation (fist attack -> left, right, and up(?)), [DONE]
      >player attack animation collision with enemy -> defeat of enemy [DONE]
      >enemy movement(hmhmhmhm), [DONE]
      >player score, [DONE]
-     >player lives with thumbnails (where the player image deteriorates with each thumbnail),
+     >player lives with thumbnails (where the player image deteriorates with each thumbnail), [DONE]
      >start button (with a custom image), 
-     >additional levels with more platforms and better enemies (Crusader enemies with characteristic
-      movement), 
      >player sounds for hitting an enemy, being hurt, etc. (my voice with a kung fu twist hahah)
      >highscores with names 
       (>fix enemy spawn accidental collision with platforms)
@@ -20,3 +18,5 @@ add (harder): >(*)animated background(flames n sheet)
               >platform spikes animation, 
               >powerups with additional levels and with little thumbnails on the side of the 
                screen of current powerups, 
+              >additional levels with more platforms and better enemies (Crusader enemies with characteristic
+               movement), 

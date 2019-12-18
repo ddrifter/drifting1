@@ -40,6 +40,7 @@ def check_keydown_events(event, player, platforms, settings, player_attack_left,
         if not player_attack_right.attack_right or not player_attack_left.attack_left:
             if player.moved_right:
                 player_attack_right.attack_right = True
+
             elif player.moved_left:
                 player_attack_left.attack_left = True
 
@@ -73,7 +74,7 @@ def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_thresh
 
 
 def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                    stats, player_attack_left, player_attack_right, enemy_movement):
+                    stats, player_attack_left, player_attack_right, enemy_movement, lives):
     """
     Update the position of all the elements on screen.
     Update the screen with every new frame, draw all the elements on screen.
@@ -123,6 +124,9 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
 
     if pygame.sprite.spritecollideany(player, enemies):
         stats.lives_left -= 1
+
+    # Draws thumbnails for players lives
+    lives.blitme(stats)
 
     if player.jumped:
         player.jump(platforms, sett)

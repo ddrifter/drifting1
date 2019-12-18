@@ -3,7 +3,7 @@ import pygame
 from pygame.sprite import Group
 
 from settings import Settings
-from player import Player
+from player import Player, PlayerLives
 from platforms import Platform
 import game_functions as gf
 from stats import GameStats
@@ -21,6 +21,7 @@ def run_game():
     pygame.display.set_caption("Arena-brawler Roguelike")
     
     player = Player(screen, sett)
+    lives = PlayerLives(screen)
     platforms = Group()
     enemies = Group()
     enemy_movement = EnemyMovement()
@@ -52,7 +53,7 @@ def run_game():
         player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett, player_attack_left, player_attack_right)
         gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                            stats, player_attack_left, player_attack_right, enemy_movement)
+                            stats, player_attack_left, player_attack_right, enemy_movement, lives)
         if enemy_counter == enemy_counter_threshold:
             enemy_counter = sett.enemy_counter
 

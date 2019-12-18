@@ -27,7 +27,7 @@ class Settings():
         # Enemy settings
         self.enemy_max_health = 100
         self.enemy_speed = 1.2
-        self.enemy_speed_multiplier = 1
+        self.enemy_speed_multiplier = 1.1
         self.enemy_level_1_dist_from_player = 400
         self.enemy_score = 10
         self.enemy_score_multiplier = 1
