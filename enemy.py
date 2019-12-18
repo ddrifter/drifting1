@@ -43,9 +43,9 @@ class Enemy(Sprite):
 
         while player_enemy_dist < settings.enemy_level_1_dist_from_player:
             # Take any x from the screen
-            possible_x = randint(0, self.screen_rect.width)
+            possible_x = randint(0, self.screen_rect.width + 200)
             # Take any y from the screen
-            possible_y = randint(0, self.screen_rect.height)
+            possible_y = randint(0, self.screen_rect.height + 200)
 
             # The distance between the player and the enemy is equal to the square root of 
             # player x coord minus enemy x coords, all squared, and added to the 

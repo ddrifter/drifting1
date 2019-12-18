@@ -86,7 +86,8 @@ def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_thresh
 
 
 def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                    stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button):
+                    stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button,
+                    score_display):
     """
     Update the position of all the elements on screen.
     Update the screen with every new frame, draw all the elements on screen.
@@ -107,6 +108,10 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
 
     # Game started
     if stats.game_active:
+        # Display the current score
+        score_display.render_score(stats.score)
+        score_display.blitme()
+
         # Periodically adds enemies on screen
         add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold)
             
@@ -143,11 +148,25 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
 
         if pygame.sprite.spritecollideany(player, enemies):
             stats.lives_left -= 1
+            if player.moved_right:
+                player.been_damaged_right = True
+            if player.moved_left:
+                player.been_damaged_left = True
             for enemy in enemies:
                 enemies.remove(enemy)
             if stats.lives_left == 0:
                 stats.game_active = False
+                player.been_damaged_left = False
+                player.been_damaged_right = False
                 stats.reset_stats(sett)
+
+        if player.been_damaged_left or player.been_damaged_right:
+            if player.damaged_counter < player.damaged_counter_threshold:
+                player.damaged_counter += 1
+            else:
+                player.damaged_counter = 0
+                player.been_damaged_left = False
+                player.been_damaged_right = False
 
         # Draws thumbnails for players lives
         lives.blitme(stats)

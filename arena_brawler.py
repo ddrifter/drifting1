@@ -10,6 +10,7 @@ from stats import GameStats
 from player_attack import PlayerFistAttackRight, PlayerFistAttackLeft
 from enemy import EnemyMovement
 from button import StartButton
+from score_display import ScoreDisplay
 
 def run_game():
     """
@@ -20,6 +21,7 @@ def run_game():
     stats = GameStats(sett)
     screen = pygame.display.set_mode((sett.swidth, sett.sheight))
     pygame.display.set_caption("Arena-brawler Roguelike")
+    score_display = ScoreDisplay(screen, stats.score)
     
     player = Player(screen, sett)
     lives = PlayerLives(screen)
@@ -55,7 +57,8 @@ def run_game():
         player.player_gravity(platforms, sett, player)
         gf.check_events(player, platforms, sett, player_attack_left, player_attack_right, stats, start_button)
         gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                            stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button)
+                            stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button,
+                            score_display)
         if enemy_counter == enemy_counter_threshold:
             enemy_counter = sett.enemy_counter
 

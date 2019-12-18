@@ -7,7 +7,8 @@ add: >enemies periodically (every 1s perhaps), [DONE]
      >player score, [DONE]
      >player lives with thumbnails (where the player image deteriorates with each thumbnail), [DONE]
      >start button (- with a custom image), [DONE]
-     >display score
+     >display score [DONE]
+     >player animation when losing a life [DONE]
      >player sounds for hitting an enemy, being hurt, etc. (my voice with a kung fu twist hahah)
      >highscores with names 
       (>fix enemy spawn accidental collision with platforms)

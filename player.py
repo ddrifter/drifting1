@@ -10,6 +10,9 @@ class Player(Sprite):
         super(Player, self).__init__()
         self.image_left = pygame.image.load("images/player_left.bmp")
         self.image_right = pygame.image.load("images/player_right.bmp")
+        self.image_damaged_left = pygame.image.load("images/player_lost_life_left.png")
+        self.image_damaged_right = pygame.image.load("images/player_lost_life_right.png")
+
         self.rect = self.image_left.get_rect()
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
@@ -43,6 +46,12 @@ class Player(Sprite):
         self.under_var = settings.under_var
         self.on_top = settings.on_top
         self.downward = False
+
+        # Flags for drawing the images of the damaged player
+        self.been_damaged_right = False
+        self.been_damaged_left = False
+        self.damaged_counter = 0
+        self.damaged_counter_threshold = 400
 
     def update_moving(self, platforms):
         """
@@ -151,9 +160,16 @@ class Player(Sprite):
         the player was facing to have a uniform player picture displayed without unnecessary
         alteration
         """
-        if self.moved_right:
+        # Drawing the damaged player images if the counter is running
+        if self.moved_right and self.damaged_counter > 0:
+            self.screen.blit(self.image_damaged_right, self.rect)
+        if self.moved_left and self.damaged_counter > 0:
+            self.screen.blit(self.image_damaged_left, self.rect)
+
+        # Drawing the usual player images
+        if self.moved_right and self.damaged_counter == 0:
             self.screen.blit(self.image_right, self.rect)
-        elif self.moved_left:
+        elif self.moved_left and self.damaged_counter == 0:
             self.screen.blit(self.image_left, self.rect)
 
 class PlayerLives(Sprite):
