@@ -17,12 +17,14 @@ class Enemy(Sprite):
         self.screen_rect = self.screen.get_rect()
 
         # Enemy stats
-        self.max_health = settings.enemy_max_health
+        self.max_health = settings.enemy_max_health # Health not yet needed
         self.curr_health = self.max_health
-        self.speed_multiplier = settings.enemy_speed_multiplier
-        self.score = settings.enemy_score
-        self.score_multiplier = settings.enemy_score_multiplier
+        self.speed_multiplier = settings.enemy1_speed_multiplier
+        self.score = settings.enemy1_score
+        self.score_multiplier = settings.enemy1_score_multiplier
         self.total_score = self.score * self.score_multiplier
+
+        self.type = 1
 
         # Calculate the enemies x and y coordinates based on the screen dimensions and player position
         self.coords = []
@@ -110,14 +112,39 @@ class EnemyMovement():
 
         # Slightly increase the speed if the enemy is very close to the player
         if self.x_move_step < 1:
-            self.x_move_step += 0.35
+            if enemy.type == 2:
+                self.x_move_step += 0.55
+            else:
+                self.x_move_step += 0.35
         if self.y_move_step < 1:
-            self.y_move_step += 0.35
+            if enemy.type == 2:
+                self.y_move_step += 0.55
+            else:
+                self.y_move_step += 0.35
 
         enemy.x += self.x_dir_coef * self.x_move_step
         enemy.y += self.y_dir_coef * self.y_move_step
         enemy.rect.x = enemy.x
         enemy.rect.y = enemy.y
 
+class Enemy2(Enemy):
+    """Defines a more advanced enemy."""
+    def __init__(self, settings, screen, player):
+        """Inherits from the Enemy class"""
+        Enemy.__init__(self, settings, screen, player)
 
+        self.image = pygame.image.load("images/enemy2.png")
+        self.speed_multiplier = settings.enemy2_speed_multiplier
+        self.score_multiplier = settings.enemy2_score_multiplier
+        self.total_score = settings.enemy2_score * self.score_multiplier
+
+        self.type = 2
+
+        self.coords = []
+        self.coords = self.get_rect_x_y(settings, player)
+        self.rect.x = self.coords[0]
+        self.rect.y = self.coords[1]
+        
+        self.x = self.rect.x
+        self.y = self.rect.y
 

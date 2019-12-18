@@ -22,7 +22,7 @@ def run_game():
     screen = pygame.display.set_mode((sett.swidth, sett.sheight))
     pygame.display.set_caption("Arena-brawler Roguelike")
     score_display = ScoreDisplay(screen, stats.score)
-    
+
     player = Player(screen, sett)
     lives = PlayerLives(screen)
     platforms = Group()

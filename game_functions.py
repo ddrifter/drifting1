@@ -8,7 +8,7 @@ import time
 import pygame
 import pygame.sprite
 
-from enemy import Enemy, EnemyMovement
+from enemy import Enemy, Enemy2, EnemyMovement
 
 def check_keydown_events(event, player, platforms, settings, player_attack_left, player_attack_right):
     """A function handling keydown events."""
@@ -81,9 +81,16 @@ def check_play_button(stats, mouse_x, mouse_y, start_button):
 def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold):
     """Adds an enemy when the requirements are fullfiled."""
     if enemy_counter == enemy_counter_threshold:
-        enemy = Enemy(sett, screen, player)
-        enemies.add(enemy)
+        sett.enemy1_for_enemy2_count += 1
+        # Add enemy2 for every third enemy1
+        if sett.enemy1_for_enemy2_count == sett.enemy1_for_enemy2_thresh:
+            enemy2 = Enemy2(sett, screen, player)
+            enemies.add(enemy2)
+            sett.enemy1_for_enemy2_count = 0
 
+        # Add enemy1
+        enemy1 = Enemy(sett, screen, player)
+        enemies.add(enemy1)
 
 def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
                     stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button,
@@ -134,7 +141,7 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
         # (both have explicitly defined rect, for future use)
         enemy_left = None
         enemy_right = None
-        if player_attack_left.attack_left == True or player_attack_right.attack_right == True:
+        if player_attack_left.counter < 40 or player_attack_right.attack_right < 40:
             enemy_left = pygame.sprite.spritecollideany(player_attack_left, enemies)
             enemy_right = pygame.sprite.spritecollideany(player_attack_right, enemies)
         if enemy_left:

@@ -10,8 +10,10 @@ add: >enemies periodically (every 1s perhaps), [DONE]
      >display score [DONE]
      >player animation when losing a life [DONE]
      >player sounds for hitting an enemy, being hurt, etc. (my voice with a kung fu twist hahah)
-     >highscores with names 
+     >highscores with names (as a button)
       (>fix enemy spawn accidental collision with platforms)
+     N>levels with increasing difficulty (increase score multiplier, make red enemies that are faster,
+      decrease spawn time, etc.)
 
 add (harder): >(*)animated background(flames n sheet)
               >enemy spawn animation

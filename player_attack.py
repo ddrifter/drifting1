@@ -12,12 +12,7 @@ class PlayerFistAttackRight(Sprite):
         self.rect = self.image.get_rect()
         self.screen = screen
         
-        # Position the right fist image on the right border of the player rect (on the inside,
-        # of course)
-        #self.rect.right = player.rect.right
-        #self.rect.centery = player.rect.centery
-        self.rect.right = 0
-        self.rect.centery = 0
+        self.offset_coords()
 
         # A flag to determine if the player is currently attacking and in which 
         # direction in order to actively change the coordinates of the fist images
@@ -30,11 +25,15 @@ class PlayerFistAttackRight(Sprite):
         self.increase = 2
         self.decrease = 2
 
+    def offset_coords(self):
+        """Sets the coordinates off screen."""
+        self.rect.x = 2000
+        self.rect.y = 2000
+
     def blitme(self):
         """A function for drawing the right fist if the player is attacking."""
         if self.attack_right:
             self.screen.blit(self.image, self.rect)
-
 
     def player_attacked(self, player):
         """Gradually changes the coordinates of the fist to the right so as to appear as if it is moving."""
@@ -51,6 +50,7 @@ class PlayerFistAttackRight(Sprite):
                 self.counter += 0.5
             if self.counter > 39:
                 # If this condition is satisfied then reset all the values for future use
+                self.offset_coords()
                 self.counter = 0
                 self.increase = 2
                 self.decrease = 2
@@ -66,15 +66,21 @@ class PlayerFistAttackLeft(Sprite):
         self.image = pygame.image.load('images/fist_left.bmp')
         self.rect = self.image.get_rect()
         self.screen = screen
+        self.screen_rect = self.screen.get_rect()
 
-        self.rect.left = player.rect.left
-        self.rect.centery = player.rect.centery
+        # Initialize off screen to avoid phantom collisions with enemies
+        self.offset_coords()
 
         self.attack_left = False
 
         self.counter = 0
         self.increase = 2
         self.decrease = 2
+
+    def offset_coords(self):
+        """Sets the coordinates off screen."""
+        self.rect.x = 2000
+        self.rect.y = 2000
 
     def blitme(self):
         """A function for drawing the left fist if the player is currently attacking."""
@@ -96,6 +102,7 @@ class PlayerFistAttackLeft(Sprite):
                 self.counter += 0.5
             if self.counter > 39:
                 # If this condition is satisfied then reset all the values for future use
+                self.offset_coords()
                 self.counter = 0
                 self.increase = 2
                 self.decrease = 2

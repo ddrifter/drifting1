@@ -71,9 +71,13 @@ class Player(Sprite):
                     # side of any platform
                     self.moving_left_counter += 1
 
-            if self.moving_left_counter == 0:        
-                self.x -= 1.5
-                self.rect.x = self.x
+            if self.moving_left_counter == 0:   
+                if self.damaged_counter > 0:
+                    self.x -= 0.9
+                    self.rect.x = self.x
+                else:     
+                    self.x -= 1.5
+                    self.rect.x = self.x
             
             # Flags for determining which player image will be displayed
             self.moved_right = False
@@ -88,8 +92,13 @@ class Player(Sprite):
                     self.moving_right_counter += 1
             
             if self.moving_right_counter == 0:
-                self.x += 1.5
-                self.rect.x = self.x  
+                # If the player lost a life recently -> apply a slowdown
+                if self.damaged_counter > 0:
+                    self.x += 0.9
+                    self.rect.x = self.x
+                else:
+                    self.x += 1.5
+                    self.rect.x = self.x  
 
              # Flags for determining which player image will be displayed
             self.moved_left = False
