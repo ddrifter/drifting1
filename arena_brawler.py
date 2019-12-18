@@ -9,6 +9,7 @@ import game_functions as gf
 from stats import GameStats
 from player_attack import PlayerFistAttackRight, PlayerFistAttackLeft
 from enemy import EnemyMovement
+from button import StartButton
 
 def run_game():
     """
@@ -25,6 +26,7 @@ def run_game():
     platforms = Group()
     enemies = Group()
     enemy_movement = EnemyMovement()
+    start_button = StartButton(screen, "Start... and die.")
 
     player_attack_right = PlayerFistAttackRight(player, screen)
     player_attack_left = PlayerFistAttackLeft(player, screen)
@@ -51,9 +53,9 @@ def run_game():
         # Game loop.
         enemy_counter += 1
         player.player_gravity(platforms, sett, player)
-        gf.check_events(player, platforms, sett, player_attack_left, player_attack_right)
+        gf.check_events(player, platforms, sett, player_attack_left, player_attack_right, stats, start_button)
         gf.update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                            stats, player_attack_left, player_attack_right, enemy_movement, lives)
+                            stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button)
         if enemy_counter == enemy_counter_threshold:
             enemy_counter = sett.enemy_counter
 

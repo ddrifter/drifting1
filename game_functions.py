@@ -3,6 +3,7 @@ All major game functions for checking events, drawing on screen,
 checking for collisions, etc.
 """
 import sys
+import time
 
 import pygame
 import pygame.sprite
@@ -56,7 +57,7 @@ def check_keyup_events(event, player):
         # Resets the downward flag
         player.downward = False
 
-def check_events(player, platforms, settings, player_attack_left, player_attack_right):
+def check_events(player, platforms, settings, player_attack_left, player_attack_right, stats, start_button):
     """Checks for all keypresses and relegates to other more specific functions."""
     for e in pygame.event.get():
         if e.type == pygame.KEYDOWN:
@@ -65,6 +66,17 @@ def check_events(player, platforms, settings, player_attack_left, player_attack_
             check_keyup_events(e, player)
         if e.type == pygame.QUIT:
             sys.exit()
+        if e.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(stats, mouse_x, mouse_y, start_button)
+
+def check_play_button(stats, mouse_x, mouse_y, start_button):
+    """If the game isn't running, start."""
+    mouse_button_collision = start_button.rect.collidepoint(mouse_x, mouse_y)
+    if mouse_button_collision and not stats.game_active:
+        stats.game_active = True
+        pygame.mouse.set_visible(False)
+
 
 def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold):
     """Adds an enemy when the requirements are fullfiled."""
@@ -74,7 +86,7 @@ def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_thresh
 
 
 def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy_counter_threshold,
-                    stats, player_attack_left, player_attack_right, enemy_movement, lives):
+                    stats, player_attack_left, player_attack_right, enemy_movement, lives, start_button):
     """
     Update the position of all the elements on screen.
     Update the screen with every new frame, draw all the elements on screen.
@@ -84,52 +96,64 @@ def update_screen(screen, sett, player, platforms, enemies, enemy_counter, enemy
 
     player.update_moving(platforms)
 
-    # Periodically adds enemies on screen
-    add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold)
-
     # Draw all platforms
     for platform in platforms:
         platform.blitme()
-    
-    # Perform enemy movement
-    for enemy in enemies:
-        enemy_movement.enemy_movement(enemy, player)
 
-    enemies.draw(screen)
-    
-    # The conditions for entering into these functions are inside the player_attack_ classes
-    player_attack_left.player_attacked(player)
-    player_attack_right.player_attacked(player)
-    player_attack_left.blitme()
-    player_attack_right.blitme()
+    # Draw the start button if the game isn't running
+    if not stats.game_active:
+        start_button.draw_button()
+        pygame.mouse.set_visible(True)
 
-    # Since pygame's inbuilt funtions for collision detection do not work with classes that have
-    # no explicitly defined (and used) rect attribute, which in this case I see as unfortunate 
-    # because I can't think of a way to implement both the left and the right fist attack in the same
-    # class using a single rect, so now there are two classes> PlayerFistAttackRight and PlayerFistAttackLeft
-    # (both have explicitly defined rect, for future use)
-    enemy_left = None
-    enemy_right = None
-    if player_attack_left.attack_left == True or player_attack_right.attack_right == True:
-        enemy_left = pygame.sprite.spritecollideany(player_attack_left, enemies)
-        enemy_right = pygame.sprite.spritecollideany(player_attack_right, enemies)
-    if enemy_left:
-        stats.score += enemy_left.total_score
-        print(stats.score)
-        enemies.remove(enemy_left)
-    if enemy_right:
-        stats.score += enemy_right.total_score
-        print(stats.score)
-        enemies.remove(enemy_right)
+    # Game started
+    if stats.game_active:
+        # Periodically adds enemies on screen
+        add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_threshold)
+            
+        # Perform enemy movement
+        for enemy in enemies:
+            enemy_movement.enemy_movement(enemy, player)
 
-    if pygame.sprite.spritecollideany(player, enemies):
-        stats.lives_left -= 1
+        enemies.draw(screen)
+            
+        # The conditions for entering into these functions are inside the player_attack_ classes
+        player_attack_left.player_attacked(player)
+        player_attack_right.player_attacked(player)
+        player_attack_left.blitme()
+        player_attack_right.blitme()
 
-    # Draws thumbnails for players lives
-    lives.blitme(stats)
+        # Since pygame's inbuilt funtions for collision detection do not work with classes that have
+        # no explicitly defined (and used) rect attribute, which in this case I see as unfortunate 
+        # because I can't think of a way to implement both the left and the right fist attack in the same
+        # class using a single rect, so now there are two classes> PlayerFistAttackRight and PlayerFistAttackLeft
+        # (both have explicitly defined rect, for future use)
+        enemy_left = None
+        enemy_right = None
+        if player_attack_left.attack_left == True or player_attack_right.attack_right == True:
+            enemy_left = pygame.sprite.spritecollideany(player_attack_left, enemies)
+            enemy_right = pygame.sprite.spritecollideany(player_attack_right, enemies)
+        if enemy_left:
+            stats.score += enemy_left.total_score
+            print(stats.score)
+            enemies.remove(enemy_left)
+        if enemy_right:
+            stats.score += enemy_right.total_score
+            print(stats.score)
+            enemies.remove(enemy_right)
 
-    if player.jumped:
-        player.jump(platforms, sett)
+        if pygame.sprite.spritecollideany(player, enemies):
+            stats.lives_left -= 1
+            for enemy in enemies:
+                enemies.remove(enemy)
+            if stats.lives_left == 0:
+                stats.game_active = False
+                stats.reset_stats(sett)
+
+        # Draws thumbnails for players lives
+        lives.blitme(stats)
+
+        if player.jumped:
+            player.jump(platforms, sett)
 
     player.blitme()
 

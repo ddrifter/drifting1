@@ -138,7 +138,12 @@ class Player(Sprite):
         if (self.jump_var >= -6 and self.under_var == 0) or self.on_top > 0:
             self.y -= (5 + self.jump_var) 
             self.rect.y = self.y
-            self.jump_var -= 0.1           
+            self.jump_var -= 0.1     
+
+    def reset_player(self):
+        """Resets the player if he's lost a life."""
+        self.rect.x = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom      
       
     def blitme(self):
         """
@@ -164,12 +169,12 @@ class PlayerLives(Sprite):
         self.rect_2 = self.image_2_lives.get_rect()
         self.rect_1 = self.image_1_lives.get_rect()
 
-        self.rect_3.y = 20
-        self.rect_3.x = 20
+        self.rect_1.y = 20
+        self.rect_1.x = 20
         self.rect_2.y = 20
         self.rect_2.x = self.rect_3.width + 40
-        self.rect_1.y = 20
-        self.rect_1.x = self.rect_3.width + self.rect_2.width + 60
+        self.rect_3.y = 20
+        self.rect_3.x = self.rect_3.width + self.rect_2.width + 60
         
     def blitme(self, stats):
         """Draws the current number of lives."""
