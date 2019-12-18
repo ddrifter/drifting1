@@ -114,11 +114,15 @@ class EnemyMovement():
         if self.x_move_step < 1:
             if enemy.type == 2:
                 self.x_move_step += 0.55
+            elif enemy.type == 3:
+                self.x_move_step += 0.7
             else:
                 self.x_move_step += 0.35
         if self.y_move_step < 1:
             if enemy.type == 2:
                 self.y_move_step += 0.55
+            elif enemy.type == 3:
+                self.y_move_step += 0.7
             else:
                 self.y_move_step += 0.35
 
@@ -139,6 +143,27 @@ class Enemy2(Enemy):
         self.total_score = settings.enemy2_score * self.score_multiplier
 
         self.type = 2
+
+        self.coords = []
+        self.coords = self.get_rect_x_y(settings, player)
+        self.rect.x = self.coords[0]
+        self.rect.y = self.coords[1]
+        
+        self.x = self.rect.x
+        self.y = self.rect.y
+
+class Enemy3(Enemy):
+    """Defines a more advanced enemy."""
+    def __init__(self, settings, screen, player):
+        """Inherits from the Enemy class"""
+        Enemy.__init__(self, settings, screen, player)
+
+        self.image = pygame.image.load("images/enemy3.png")
+        self.speed_multiplier = settings.enemy3_speed_multiplier
+        self.score_multiplier = settings.enemy3_score_multiplier
+        self.total_score = settings.enemy3_score * self.score_multiplier
+
+        self.type = 3
 
         self.coords = []
         self.coords = self.get_rect_x_y(settings, player)

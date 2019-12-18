@@ -8,7 +8,7 @@ import time
 import pygame
 import pygame.sprite
 
-from enemy import Enemy, Enemy2, EnemyMovement
+from enemy import Enemy, Enemy2, Enemy3, EnemyMovement
 
 def check_keydown_events(event, player, platforms, settings, player_attack_left, player_attack_right):
     """A function handling keydown events."""
@@ -84,9 +84,15 @@ def add_enemy(screen, player, sett, enemies, enemy_counter, enemy_counter_thresh
         sett.enemy1_for_enemy2_count += 1
         # Add enemy2 for every third enemy1
         if sett.enemy1_for_enemy2_count == sett.enemy1_for_enemy2_thresh:
+            sett.enemy2_for_enemy3_count += 1
             enemy2 = Enemy2(sett, screen, player)
             enemies.add(enemy2)
             sett.enemy1_for_enemy2_count = 0
+            # Add enemy3 for every third enemy2
+            if sett.enemy2_for_enemy3_count == sett.enemy2_for_enemy3_thresh:
+                enemy3 = Enemy3(sett, screen, player)
+                enemies.add(enemy3)
+                sett.enemy2_for_enemy3_count = 0
 
         # Add enemy1
         enemy1 = Enemy(sett, screen, player)
